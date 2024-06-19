@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Premier League Prediction</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+         .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            height: 20px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            display: flex; /* Use flexbox to arrange items side by side */
+        }
+        .progress-bar .progress {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+            transition: width 0.5s ease-in-out;
+            /*flex: 1; /* Equal width for each progress bar */
+        }
+        .home-win {
+            background-color: #4caf50; /* Green */
+        }
+        .draw {
+            background-color: #ffc107; /* Yellow */
+        }
+        .away-win {
+            background-color: #f44336; /* Red */
+        }
+
+        .custom-max-width {
+    max-width: none; /* Override Tailwind's max-width */
+    width: 60%; /* Set a custom width */
+    max-width: 1200px; /* Optionally set a maximum width */
+    margin-left: auto; /* Center the element horizontally */
+    margin-right: auto;
+  }
+    </style>
+</head>
+<body style="background-image: url('/static/background.png'); background-size: cover; background-repeat: no-repeat; background-position: center;">
+    <div class="bg-white p-8 rounded-lg shadow-lg custom-max-width ml-auto mt-5 mr-5">
+        <h1 class="text-2xl font-bold mb-6 text-center">Premier League Match Prediction</h1>
+        <form id="predictionForm" class="space-y-4">
+            <div>
+                <label for="HomeTeam" class="block text-sm font-medium text-gray-700">Home Team</label>
+                <input type="text" id="HomeTeam" name="HomeTeam" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="AwayTeam" class="block text-sm font-medium text-gray-700">Away Team</label>
+                <input type="text" id="AwayTeam" name="AwayTeam" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
+                <input type="number" id="year" name="year" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="month" class="block text-sm font-medium text-gray-700">Month</label>
+                <input type="number" id="month" name="month" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="HTHG" class="block text-sm font-medium text-gray-700">Half Time Home Goals</label>
+                <input type="number" id="HTHG" name="HTHG" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="HTAG" class="block text-sm font-medium text-gray-700">Half Time Away Goals</label>
+                <input type="number" id="HTAG" name="HTAG" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Predict</button>
+            </div>
+        </form>
+        <div id="predictionResult" class="mt-6 text-center text-lg text-gray-700">
+            <div class="progress-bar">
+                <div class="progress home-win" id="homeWinBar" style="width:0%"></div>
+                <div class="progress draw" id="drawBar" style="width:0%"></div>
+                <div class="progress away-win" id="awayWinBar" style="width:0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#predictionForm').on('submit', function(event) {
+                event.preventDefault();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/predict',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        const homeWinProb = response.prediction[0][0] * 100;
+                        const drawProb = response.prediction[0][1] * 100;
+                        const awayWinProb = response.prediction[0][2] * 100;
+
+                        $('#homeWinBar').animate({ width: homeWinProb + '%' }, 500).text( homeWinProb.toFixed(2) + '%');
+                        $('#drawBar').animate({ width: drawProb + '%' }, 500).text( drawProb.toFixed(2) + '%');
+                        $('#awayWinBar').animate({ width: awayWinProb + '%' }, 500).text( awayWinProb.toFixed(2) + '%');
+                    },
+                    error: function(error) {
+                        console.log(error);
+                        $('#predictionResult').html('Error occurred while making prediction.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
