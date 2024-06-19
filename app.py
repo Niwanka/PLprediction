@@ -2,7 +2,7 @@ import joblib
 from flask import Flask, request, jsonify,  render_template
 import pandas as pd
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 model , dummy_columns= joblib.load('model.pkl')
 

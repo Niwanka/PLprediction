@@ -1,0 +1,74 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background: url('/static/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    
+    
+}
+.custom-max-width {
+    max-width: none;
+    width: 50%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    margin-top: 17%;
+}
+.form-container {
+    width: 100%;
+    backdrop-filter: blur(10px);
+    background-color: rgb(26, 35, 126, 0.8);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.progress-bar {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    height: 20px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    display: flex;
+}
+.progress-bar .progress {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    transition: width 0.5s ease-in-out;
+}
+.home-win {
+    background-color: #4caf50;
+}
+.draw {
+    background-color: #ffc107;
+}
+.away-win {
+    background-color: #f44336;
+}
+.team-container, .goal-container, .date-container {
+    display: flex;
+    width: 100%;
+    gap: 1rem;
+}
+.flex {
+    display: flex;
+}
+.flex-1 {
+    flex: 1;
+}
+.space-x-4 > * + * {
+    margin-left: 1rem;
+}
+
+.navbar{
+    background-color: rgb(26, 35, 126);
+}
